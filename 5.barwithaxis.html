@@ -1,0 +1,120 @@
+<html>
+<head>
+    <meta chartset="utf-8">
+    <title>Chart</title>
+    <style>
+
+.axis path,
+.axis line{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+    </style>
+</head>
+<body>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    setTimeout(function(){
+        var width = 600,height=600, num =15;
+        var ds = [];
+        for (var i = 0; i < num; i++) {
+            ds.push(Math.floor(Math.random()*50));
+        };
+
+        var svg = d3.select("body").append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+        var xAxisscale = d3.scale.ordinal()
+                    .domain(d3.range(ds.length))
+                    .rangeRoundBands([0, 500]);
+        var yAxisscale = d3.scale.linear()
+                    .domain([0,d3.max(ds)])
+                    .range([500,0]);
+        var xaxis = d3.svg.axis()
+                        .scale(xAxisscale)
+                        .orient("bottom");
+        var yaxis = d3.svg.axis()
+                        .scale(yAxisscale)
+                        .orient("left");
+
+        var xscale = d3.scale.ordinal()
+                    .domain(d3.range(ds.length))
+                    .rangeRoundBands([0, 500], 0.05);
+        var yscale = d3.scale.linear()
+                    .domain([0,d3.max(ds)])
+                    .range([0,500]);
+
+        svg.selectAll("rect")
+            .data(ds)
+            .enter()
+            .append("rect")
+            .attr("x", function(d,i){return 30+xscale(i);})
+            .attr("y", 50+500)
+            .attr("width", function(d,i){ return xscale.rangeBand();})
+            .attr("height", 0)
+            .attr("fill", "red")
+            .transition()           //animation start here
+            .duration(2000)
+            .ease("bounce") //transition mode: linear/circle/elastic/bounce
+            //.delay(500)
+            .delay(function(d,i){return 200*i})
+            .attr("y", function(d,i){return 50+500 - yscale(d);})
+            .attr("height", yscale)
+            .attr("fill", "steelblue");
+
+        svg.selectAll("text")
+            .data(ds)
+            .enter().append("text")
+            .attr("x", function(d,i){return 30+xscale(i);})
+            .attr("y", 50+500)
+            .attr("dx", function(d,i){return xscale.rangeBand()/3})
+            .attr("dy", 15)
+            .attr("text-anchor", "begin")
+            .attr("font-size", 14)
+            .attr("fill", "white")
+            .text(function(d,i){return d;})
+            .transition()
+            .duration(2000)
+            .ease("bounce") //linear/circle/elastic/bounce
+            .delay(function(d,i){return 200 * i})
+            .attr("y", function(d,i){return 50+500 - yscale(d);});
+
+        //axises
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(30,550)")
+            .call(xaxis);
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(30,50)")
+            .call(yaxis);
+
+        //interactive
+
+        svg.selectAll("rect")
+            .on("click", function(d,i){
+                d3.select(this)
+                    .attr("fill", "green");
+            })
+            .on("mouseover", function(d,i){
+                d3.select(this)
+                    .attr("fill", "yellow");
+            })
+            .on("mouseout", function(d,i){
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .attr("fill", "steelblue");
+            });
+
+    },1000);
+    </script>
+</body>
+</html>

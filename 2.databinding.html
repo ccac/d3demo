@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta chartset="utf-8">
+    <title>HelloWorld</title>
+</head>
+<body>
+    <p>Hello World 1</p>
+    <p>Hello World 2</p>
+    <p id="p3">Hello World 3</p>
+    <p>Hello World 4</p>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    setTimeout(function(){
+        var set = ["I like dog","I like cat","I like snake", "4" , "6"];
+        var p = d3.select("body").selectAll("p");
+        p.data(set)
+         .text(function(d, i){return d+i;});
+        p.style("color","red");
+        p.style("font-size", "72px");
+    },1000);
+
+    setTimeout(function(){
+        var sp = d3.select("body").select("#p3");
+        sp.text("bind");
+    },2000);
+    </script>
+</body>
+</html>

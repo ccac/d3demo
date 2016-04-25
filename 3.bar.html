@@ -1,0 +1,76 @@
+<html>
+<head>
+    <meta chartset="utf-8">
+    <title>HelloWorld</title>
+    <style>
+
+.axis path,
+.axis line{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+    </style>
+</head>
+<body>
+    <p>Hello World 1</p>
+    <p>Hello World 2</p>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    setTimeout(function(){
+        var width = 600,height=600;
+
+        var svg = d3.select("body").append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+        var ds = [ 30 , 20, 45, 12, 21];
+
+
+
+        svg.selectAll("rect")
+            .data(ds)
+            .enter()
+            .append("rect")
+            .attr("x", 10)
+            .attr("y", function(d,i){return i * 30;})
+            .attr("width", function(d,i){return d * 10})
+            .attr("height", 28)
+            .attr("fill", "blue");
+
+        var wx = d3.scale.linear()
+                    .domain([0,d3.max(ds)])
+                    .range([0,500]);
+
+        setTimeout(function(){
+
+            svg.selectAll("rect")
+                .attr("width", wx)
+                .attr("fill", "red");
+        }, 1000);
+
+        setTimeout(function() {
+            var axis = d3.svg.axis()
+                        .scale(wx)
+                        .orient("bottom");
+            var g = svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(10,160)");
+                //axis(g);
+                g.call(axis);   //equal axis(g). obj.call(foo) means pass obj as param to function foo.
+
+        }, 2000);
+
+        setTimeout(function() {
+            ds[0] = 15;
+            svg.selectAll("rect").data(ds).attr("width", function(d,i){return d * 10})
+        }, 3000);
+    },1000);
+    </script>
+</body>
+</html>
